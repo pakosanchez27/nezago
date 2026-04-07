@@ -8,7 +8,10 @@ export default function Layout() {
 
   return (
     <>
-      <div className="min-h-screen bg-white">
+      <div
+        className="min-h-screen bg-white bg-cover bg-no-repeat bg-center bg-no-repeat"
+        style={{ backgroundImage: 'url("/img/fondos/fondo.png")' }}
+      >
         <header className="bg-neza-primary px-4 py-2 shadow-sm">
           <div className="mx-auto flex max-w-6xl items-center justify-between">
             <button

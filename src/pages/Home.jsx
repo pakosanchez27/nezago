@@ -1,3 +1,5 @@
+import ImageCarousel from "../components/ImageCarousel";
+
 export default function Home() {
   return (
     <>
@@ -10,7 +12,7 @@ export default function Home() {
         alt=""
         className="absolute inset-0 h-full w-full object-cover opacity-90"
       />
-      <div className="relative z-10 flex flex-col h-full justify-start px-6 py-6">
+      <div className="relative z-10 flex flex-col h-full justify-start px-6 py-8">
         <div className="text-sm font-medium text-white bg-neza-secondary-b px-4 py-2 rounded-2xl w-max mb-2 flex justify-between items-center gap-2">
           <span>BIENVENIDO DE VUELTA</span>
         </div>
@@ -18,8 +20,8 @@ export default function Home() {
         <p className=" text-white">Tu viaje urbano continúa hoy.</p>
       </div>
     </section>
-    <section className="carrusel">
-        hola
+    <section className="carrusel ">
+      <ImageCarousel />
     </section>
     </>
   );
