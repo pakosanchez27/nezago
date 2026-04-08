@@ -3,7 +3,7 @@ import Layout from "./layouts/Layout";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import Mapa from "./pages/Mapa";
 import Pasaporte from "./pages/Pasaporte";
 import Cupones from "./pages/Cupones";
@@ -11,6 +11,9 @@ import Chat from "./pages/Chat";
 import RutaGastronomica from "./pages/RutaGastronomica";
 import Cuponera from "./pages/Cuponera";
 import Eventos from "./pages/Eventos";
+import DatosHistoricos from "./pages/DatosHistoricos";
+import DetalleDatoHistorico from "./pages/DetalleDatoHistorico";
+import DetalleLugarMapa from "./pages/DetalleLugarMapa";
 import HistoriaNezahualcoyotl from "./pages/HistoriaNezahualcoyotl";
 import RutasTransporte from "./pages/RutasTransporte";
 import TianguisHoy from "./pages/TianguisHoy";
@@ -26,6 +29,10 @@ const router = createBrowserRouter([
             {
                 path: "mapa",
                 element: <Mapa />
+            },
+            {
+                path: "mapa/detalle",
+                element: <DetalleLugarMapa />
             },
             {
                 path: "pasaporte",
@@ -54,6 +61,14 @@ const router = createBrowserRouter([
             {
                 path: "historia-de-nezahualcoyotl",
                 element: <HistoriaNezahualcoyotl />
+            },
+            {
+                path: "historia-de-nezahualcoyotl/datos-historicos",
+                element: <DatosHistoricos />
+            },
+            {
+                path: "historia-de-nezahualcoyotl/detalle",
+                element: <DetalleDatoHistorico />
             },
             {
                 path: "rutas-de-transporte",
