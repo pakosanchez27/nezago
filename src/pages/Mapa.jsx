@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import lugaresMapa from "../data/mapa.json";
+import lugaresMapa from "../data/mapa-completo.json";
 
 const nezaCenter = [19.4006, -99.0148];
 
@@ -11,90 +11,131 @@ function sanitizeText(value) {
   if (!value) return "";
 
   return String(value)
-    .replaceAll("Ã¡", "á")
-    .replaceAll("Ã©", "é")
-    .replaceAll("Ã­", "í")
-    .replaceAll("Ã³", "ó")
-    .replaceAll("Ãº", "ú")
-    .replaceAll("Ã", "Á")
-    .replaceAll("Ã‰", "É")
-    .replaceAll("Ã", "Í")
-    .replaceAll("Ã“", "Ó")
-    .replaceAll("Ãš", "Ú")
-    .replaceAll("Ã±", "ñ")
-    .replaceAll("Ã‘", "Ñ")
-    .replaceAll("Ã¼", "ü")
-    .replaceAll("Ãœ", "Ü")
-    .replaceAll("Â°", "°")
-    .replaceAll("Âº", "º")
-    .replaceAll("Â", "")
+    .replaceAll("ÃƒÂ¡", "Ã¡")
+    .replaceAll("ÃƒÂ©", "Ã©")
+    .replaceAll("ÃƒÂ­", "Ã­")
+    .replaceAll("ÃƒÂ³", "Ã³")
+    .replaceAll("ÃƒÂº", "Ãº")
+    .replaceAll("ÃƒÂ", "Ã")
+    .replaceAll("Ãƒâ€°", "Ã‰")
+    .replaceAll("ÃƒÂ", "Ã")
+    .replaceAll("Ãƒâ€œ", "Ã“")
+    .replaceAll("ÃƒÅ¡", "Ãš")
+    .replaceAll("ÃƒÂ±", "Ã±")
+    .replaceAll("Ãƒâ€˜", "Ã‘")
+    .replaceAll("ÃƒÂ¼", "Ã¼")
+    .replaceAll("ÃƒÅ“", "Ãœ")
+    .replaceAll("Ã‚Â°", "Â°")
+    .replaceAll("Ã‚Âº", "Âº")
+    .replaceAll("Ã‚", "")
     .replaceAll("\n", " ")
     .trim();
 }
 
-function resolveCategory(nombreActividad = "") {
-  const activity = sanitizeText(nombreActividad).toLowerCase();
-
-  if (activity.includes("otras especialidades")) return "Especialidades";
-  if (activity.includes("no requieren hospitalizacion")) return "Atencion medica";
-  return "Hospital general";
+function normalizeText(value = "") {
+  return sanitizeText(value).toLowerCase().trim().replace(/\s+/g, " ");
 }
 
-const CATEGORY_STYLES = {
-  "Hospital general": "#7A0F35",
-  Especialidades: "#8D6B10",
-  "Atencion medica": "#0F6A4B",
-};
+function getCategoryIcon(category = "") {
+  const text = normalizeText(category);
+  console.log('====================================');
+  console.log(text);
+  console.log('====================================');
+  if (text.includes("policia")) return "/img/iconos/Policia.png";
+  if (text.includes("seguridad")) return "/img/iconos/seguridad.png";
+  if (text.includes("bomberos")) return "/img/iconos/Bomberos.png";
+  if (text.includes("proteccion civil")) return "/img/iconos/proteccion-civil.png";
+  if (text.includes("hospital")) return "/img/iconos/hospital.png";
+  if (text.includes("clínica")) return "/img/iconos/clinica.png";
 
-const mapPlaces = lugaresMapa.features.map((feature) => {
-  const props = feature.properties ?? {};
-  const [lng, lat] = feature.geometry?.coordinates ?? [nezaCenter[1], nezaCenter[0]];
-  const category = resolveCategory(props.nombre_act);
-
-  return {
-    id: props.fid,
-    name: sanitizeText(props.nom_estab) || "Lugar sin nombre",
-    category,
-    position: [lat, lng],
-    description:
-      sanitizeText(props.nombre_act) || "Punto de interes cargado desde GeoJSON.",
-    color: CATEGORY_STYLES[category] || "#7A0F35",
-    image: sanitizeText(props.imagen) || "/img/eventos/evento1.jpg",
-    address: sanitizeText(props.direccion) || sanitizeText(props.nom_vial),
-    rating: "4.8",
-    phone: sanitizeText(props.telefono),
-    website: sanitizeText(props.www),
-    email: sanitizeText(props.correoelec),
-  };
-});
-
-function createPin() {
-  return divIcon({
-    className: "",
-    html: `
-      <div style="
-        width: 44px;
-        height: 44px;
-        position: relative;
-        filter: drop-shadow(0 8px 18px rgba(0,0,0,0.22));
-      ">
-        <img
-          src="/img/iconos/clinica.png"
-          alt=""
-          style="position: absolute; inset: 0; width: 44px; height: 44px; object-fit: contain;"
-        />
-      </div>
-    `,
-    iconSize: [44, 44],
-    iconAnchor: [22, 38],
-  });
+  return "/img/iconos/ubicacion.png";
 }
+
+const iconCache = {};
+
+function getIcon(category) {
+  if (!iconCache[category]) {
+    const iconUrl = getCategoryIcon(category);
+
+    iconCache[category] = divIcon({
+      className: "",
+      html: `
+        <div style="
+          width: 110px;
+          height: 110px;
+          position: relative;
+          filter: drop-shadow(0 8px 18px rgba(0,0,0,0.22));
+        ">
+          <img
+            src="${iconUrl}"
+            alt="${category}"
+            style="position: absolute; inset: 0; width: 110px; height: 110px; object-fit: contain;"
+          />
+        </div>
+      `,
+      iconSize: [44, 44],
+      iconAnchor: [22, 38],
+    });
+  }
+
+  return iconCache[category];
+}
+
+function parseCoordinate(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function isValidPosition(position) {
+  return (
+    Array.isArray(position) &&
+    position.length === 2 &&
+    Number.isFinite(position[0]) &&
+    Number.isFinite(position[1])
+  );
+}
+
+const mapPlaces = (lugaresMapa.features ?? [])
+  .map((feature) => {
+    const props = feature.properties ?? {};
+    const coordinates = feature.geometry?.coordinates ?? [];
+    const lng = parseCoordinate(coordinates[0], null);
+    const lat = parseCoordinate(coordinates[1], null);
+
+    if (lat === null || lng === null) {
+      return null;
+    }
+
+    const categoryLabel = sanitizeText(props.nombre_act) || "Sin categoria";
+    const position = [lat, lng];
+
+    if (!isValidPosition(position)) {
+      return null;
+    }
+
+    return {
+      id: props.fid,
+      name: sanitizeText(props.nom_estab) || "Lugar sin nombre",
+      category: categoryLabel,
+      normalizedCategory: normalizeText(categoryLabel),
+      position,
+      description:
+        sanitizeText(props.nombre_act) ||
+        "Punto de interes cargado desde GeoJSON.",
+      image: sanitizeText(props.imagen) || "/img/eventos/evento1.jpg",
+      address: sanitizeText(props.direccion) || sanitizeText(props.nom_vial),
+      phone: sanitizeText(props.telefono),
+      website: sanitizeText(props.www),
+      email: sanitizeText(props.correoelec),
+    };
+  })
+  .filter(Boolean);
 
 function FocusMap({ place }) {
   const map = useMap();
 
   useEffect(() => {
-    if (!place) return;
+    if (!place || !isValidPosition(place.position)) return;
     map.flyTo(place.position, 15, { duration: 0.8 });
   }, [map, place]);
 
@@ -103,25 +144,41 @@ function FocusMap({ place }) {
 
 export default function Mapa() {
   const navigate = useNavigate();
-  const categories = ["Todo", ...new Set(mapPlaces.map((place) => place.category))];
-  const [activeCategory, setActiveCategory] = useState("Todo");
+  const categories = useMemo(
+    () => [ ...new Set(mapPlaces.map((place) => place.category))],
+    [],
+  );
+  const [activeCategory, setActiveCategory] = useState("policia");
   const [query, setQuery] = useState("");
   const [selectedPlace, setSelectedPlace] = useState(null);
 
+  const normalizedQuery = normalizeText(query);
+
   const visiblePlaces = mapPlaces.filter((place) => {
-    const loweredQuery = query.toLowerCase();
     const matchesCategory =
-      activeCategory === "Todo" || place.category === activeCategory;
+      activeCategory === "todo" || place.normalizedCategory === activeCategory;
+
     const matchesQuery =
-      query.trim() === "" ||
-      place.name.toLowerCase().includes(loweredQuery) ||
-      place.category.toLowerCase().includes(loweredQuery) ||
-      place.address.toLowerCase().includes(loweredQuery);
+      normalizedQuery === "" ||
+      normalizeText(place.name).includes(normalizedQuery) ||
+      place.normalizedCategory.includes(normalizedQuery) ||
+      normalizeText(place.address).includes(normalizedQuery);
 
     return matchesCategory && matchesQuery;
   });
 
-  const placesToRender = visiblePlaces.length > 0 ? visiblePlaces : mapPlaces;
+  const searchResults =
+    normalizedQuery === ""
+      ? []
+      : mapPlaces
+          .filter((place) => {
+            return (
+              normalizeText(place.name).includes(normalizedQuery) ||
+              place.normalizedCategory.includes(normalizedQuery) ||
+              normalizeText(place.address).includes(normalizedQuery)
+            );
+          })
+          .slice(0, 6);
 
   const mapsUrl = selectedPlace
     ? `https://www.google.com/maps/search/?api=1&query=${selectedPlace.position[0]},${selectedPlace.position[1]}`
@@ -138,18 +195,20 @@ export default function Mapa() {
           zoomControl={false}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; CARTO'
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <FocusMap place={selectedPlace} />
-          {placesToRender.map((place) => (
-            <Marker
-              key={place.id}
-              position={place.position}
-              icon={createPin()}
-              eventHandlers={{ click: () => setSelectedPlace(place) }}
-            />
-          ))}
+          {visiblePlaces
+            .filter((place) => isValidPosition(place.position))
+            .map((place) => (
+              <Marker
+                key={place.id}
+                position={place.position}
+                icon={getIcon(place.category)}
+                eventHandlers={{ click: () => setSelectedPlace(place) }}
+              />
+            ))}
         </MapContainer>
       </div>
 
@@ -162,27 +221,71 @@ export default function Mapa() {
                 type="text"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Buscar murales, monumentos..."
+                placeholder="Buscar policias, hospitales o direcciones..."
                 className="w-full bg-transparent text-[14px] text-[#4B3940] outline-none placeholder:text-[#9B8B91]"
               />
-              <span className="text-[#7A0F35]">☷</span>
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="text-[#7A0F35]"
+                >
+                  ×
+                </button>
+              ) : (
+                <span className="text-[#7A0F35]">⌖</span>
+              )}
             </div>
 
+            {searchResults.length > 0 ? (
+              <div className="mt-3 max-h-[250px] overflow-y-auto rounded-[22px] bg-[#F5F6F8] p-2">
+                {searchResults.map((place) => (
+                  <button
+                    key={place.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveCategory("todo");
+                      setSelectedPlace(place);
+                      setQuery(place.name);
+                    }}
+                    className="flex w-full items-start justify-between gap-3 rounded-[18px] px-3 py-3 text-left transition hover:bg-white"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-bold text-[#23171C]">
+                        {place.name}
+                      </p>
+                      <p className="mt-1 text-[12px] text-[#7D6870]">
+                        {place.address}
+                      </p>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-white px-2 py-1 text-[10px] font-semibold uppercase text-[#611232]">
+                      {place.category}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
+
             <div className="mt-3 flex gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => setActiveCategory(category)}
-                  className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-medium transition ${
-                    activeCategory === category
-                      ? "bg-[#FFD175] text-[#6A4B00]"
-                      : "bg-[#F5F6F8] text-[#5F4B52]"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+              {categories.map((category) => {
+                const normalizedCategory = normalizeText(category);
+                const isActive = activeCategory === normalizedCategory;
+
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => setActiveCategory(normalizedCategory)}
+                    className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-medium transition ${
+                      isActive
+                        ? "bg-[#FFD175] text-[#6A4B00]"
+                        : "bg-[#F5F6F8] text-[#5F4B52]"
+                    }`}
+                  >
+                    {category === "todo" ? "Todo" : category}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -210,18 +313,13 @@ export default function Mapa() {
               </div>
 
               <div className="space-y-3 p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2 className="text-[18px] font-bold leading-6 text-[#23171C]">
-                      {selectedPlace.name}
-                    </h2>
-                    <p className="mt-1 text-[13px] text-[#7D6870]">
-                      • {selectedPlace.address}
-                    </p>
-                  </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF3D6] px-2.5 py-1 text-[12px] font-bold text-[#8D6B10]">
-                    ★ {selectedPlace.rating}
-                  </span>
+                <div>
+                  <h2 className="text-[18px] font-bold leading-6 text-[#23171C]">
+                    {selectedPlace.name}
+                  </h2>
+                  <p className="mt-1 text-[13px] text-[#7D6870]">
+                    • {selectedPlace.address}
+                  </p>
                 </div>
 
                 <p className="text-[14px] leading-6 text-[#5F4B52]">
@@ -235,7 +333,7 @@ export default function Mapa() {
                     rel="noreferrer"
                     className="flex-1 rounded-full bg-[#611232] px-4 py-3 text-center text-[14px] font-bold text-white"
                   >
-                    ¿Como llegar?
+                    Como llegar
                   </a>
                   <button
                     type="button"
@@ -246,7 +344,7 @@ export default function Mapa() {
                     }
                     className="rounded-full bg-[#F5F1F2] px-5 py-3 text-[14px] font-bold text-[#3F3136]"
                   >
-                    Ver más
+                    Ver mas
                   </button>
                 </div>
               </div>

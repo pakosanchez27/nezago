@@ -1,29 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-const slides = [
-  {
-    id: 1,
-    image: "/img/carrusel/groovelanddesigns-beans-4783866.jpg",
-    to: "/pasaporte",
-    eyebrow: "POR AMOR A NEZA",
-    title: "Pasaporte Gastronomico\nNeza 2026",
-  },
-  {
-    id: 2,
-    image: "/img/carrusel/joshuemd-pizza-329523.jpg",
-    to: "/ruta-gastronomica",
-    eyebrow: "SABORES DE BARRIO",
-    title: "Ruta de antojitos\nimperdibles",
-  },
-  {
-    id: 3,
-    image: "/img/carrusel/pexels-beans-1834984.jpg",
-    to: "/eventos",
-    eyebrow: "EXPLORA NEZA",
-    title: "Descubre mercados\ny experiencias",
-  },
-];
+import { carouselPosts } from "../data/carouselPosts";
 
 export default function ImageCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,13 +8,13 @@ export default function ImageCarousel() {
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? slides.length - 1 : prevIndex - 1
+      prevIndex === 0 ? carouselPosts.length - 1 : prevIndex - 1
     );
   };
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === slides.length - 1 ? 0 : prevIndex + 1
+      prevIndex === carouselPosts.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -63,9 +40,9 @@ export default function ImageCarousel() {
   };
 
   return (
-    <div className="mx-auto -mt-[100px] w-full max-w-[398px]">
+    <div className="mx-auto -mt-[100px] w-full max-w-[398px] md:mt-0 md:max-w-none">
       <div
-        className="relative h-[200px] overflow-hidden rounded-[20px] shadow-[0_14px_40px_rgba(97,18,50,0.25)]"
+        className="relative h-[200px] overflow-hidden rounded-[20px] shadow-[0_14px_40px_rgba(97,18,50,0.25)] md:h-[260px] md:rounded-[28px] lg:h-[290px]"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -73,10 +50,13 @@ export default function ImageCarousel() {
           className="flex h-full transition-transform duration-300 ease-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {slides.map((slide) => (
+          {carouselPosts.map((slide) => (
             <article key={slide.id} className="relative h-full min-w-full">
               <div className="absolute inset-0 bg-[#4b403d]" />
-              <Link to={slide.to} className="block h-full w-full">
+              <Link
+                to={`/blog/${slide.slug}`}
+                className="block h-full w-full"
+              >
                 <img
                   src={slide.image}
                   alt={slide.title}
@@ -125,7 +105,7 @@ export default function ImageCarousel() {
         </button>
 
         <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5">
-          {slides.map((slide, index) => (
+          {carouselPosts.map((slide, index) => (
             <span
               key={slide.id}
               className={`h-1.5 rounded-full transition-all ${

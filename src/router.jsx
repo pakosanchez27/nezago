@@ -11,10 +11,13 @@ import Chat from "./pages/Chat";
 import RutaGastronomica from "./pages/RutaGastronomica";
 import Cuponera from "./pages/Cuponera";
 import Eventos from "./pages/Eventos";
+import DetalleEvento from "./pages/DetalleEvento";
 import DatosHistoricos from "./pages/DatosHistoricos";
 import DetalleDatoHistorico from "./pages/DetalleDatoHistorico";
 import DetalleLugarMapa from "./pages/DetalleLugarMapa";
+import DetalleBlog from "./pages/DetalleBlog";
 import HistoriaNezahualcoyotl from "./pages/HistoriaNezahualcoyotl";
+import MapaRutaGastronomica from "./pages/MapaRutaGastronomica";
 import RutasTransporte from "./pages/RutasTransporte";
 import TianguisHoy from "./pages/TianguisHoy";
 const router = createBrowserRouter([
@@ -31,6 +34,10 @@ const router = createBrowserRouter([
                 element: <Mapa />
             },
             {
+                path: "ruta-gastronomica/mapa",
+                element: <MapaRutaGastronomica />
+            },
+            {
                 path: "mapa/detalle",
                 element: <DetalleLugarMapa />
             },
@@ -43,12 +50,12 @@ const router = createBrowserRouter([
                 element: <Cupones />
             },
             {
-                path: "chat",
+                path: "coyito",
                 element: <Chat />
             },
             {
                 path: "ruta-gastronomica",
-                element: <RutaGastronomica />
+                element: <MapaRutaGastronomica />
             },
             {
                 path: "cuponera",
@@ -57,6 +64,14 @@ const router = createBrowserRouter([
             {
                 path: "eventos",
                 element: <Eventos />
+            },
+            {
+                path: "eventos/:slug",
+                element: <DetalleEvento />
+            },
+            {
+                path: "blog/:slug",
+                element: <DetalleBlog />
             },
             {
                 path: "historia-de-nezahualcoyotl",
@@ -85,11 +100,11 @@ const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
             {
-                path: "/auth/login",
+                path: "login",
                 element: <Login />
             },
             {
-                path: "auth/registro",
+                path: "registro",
                 element: <Registro />
             }
         ]

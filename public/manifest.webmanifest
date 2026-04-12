@@ -1,0 +1,26 @@
+{
+  "name": "NezaGo!",
+  "short_name": "NezaGo",
+  "description": "Explora Nezahualcoyotl con mapas, rutas, eventos, cupones y Coyito.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8f2",
+  "theme_color": "#611232",
+  "lang": "es-MX",
+  "icons": [
+    {
+      "src": "/img/iconos/coyito.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/iconos/coyito.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

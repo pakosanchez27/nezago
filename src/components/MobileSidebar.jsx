@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 const sidebarItems = [
   { label: "Inicio", icon: "/img/iconos/home.svg", to: "/" },
   { label: "Pasaporte", icon: "/img/iconos/passport.svg", to: "/pasaporte" },
-  { label: "Ruta Gastronomica", icon: "/img/iconos/briefcase_meal.svg", to: "/ruta-gastronomica" },
+  { label: "Ruta Gastronomica", icon: "/img/iconos/briefcase_meal.svg", to: "ruta-gastronomica" },
   { label: "Cuponera", icon: "/img/iconos/confirmation_number.svg", to: "/cuponera" },
   { label: "Eventos", icon: "/img/iconos/comedy_mask.svg", to: "/eventos" },
-  { label: "Mapa de Nezahualcoyotl", icon: "/img/iconos/mapa.svg", to: "/mapa" },
+  { label: "Puntos de Interes", icon: "/img/iconos/mapa.svg", to: "/mapa" },
   { label: "Historia de Nezahualcoyotl", icon: "/img/iconos/account_balance.svg", to: "/historia-de-nezahualcoyotl" },
   { label: "Rutas de Transporte", icon: "/img/iconos/directions.svg", to: "/rutas-de-transporte" },
   { label: "Tianguis de hoy", icon: "/img/iconos/local_mall.svg", to: "/tianguis-de-hoy" },
-  { label: "Chat Bot", icon: "/img/iconos/chat_bubble.svg", to: "/chat" },
+  { label: "Coyito", icon: "/img/iconos/chat_bubble.svg", to: "/coyito" },
 ];
 
 export default function MobileSidebar({ isOpen, onClose }) {

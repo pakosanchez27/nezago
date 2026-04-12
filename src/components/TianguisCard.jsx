@@ -4,28 +4,35 @@ export default function TianguisCard({ tianguis }) {
   return (
     <Link
       to="/tianguis-de-hoy"
-      className="flex h-[230px] w-[300px] shrink-0 flex-col rounded-[28px] border border-[#F1E7EA] bg-white p-5 shadow-[0_18px_40px_rgba(97,18,50,0.08)]"
+      className="group relative flex h-[250px] w-[300px] shrink-0 flex-col overflow-hidden rounded-[30px] border border-[#F1E7EA] bg-[linear-gradient(180deg,#ffffff_0%,#fff8f2_100%)] p-5 shadow-[0_18px_40px_rgba(97,18,50,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_46px_rgba(97,18,50,0.12)] md:h-full md:w-full"
     >
-      <div className="min-h-[48px]">
-        <h3 className="text-[18px] font-bold leading-6 text-[#611232]">
-          {tianguis.title}
-        </h3>
-      </div>
+      <div className="absolute right-[-18px] top-[-18px] h-24 w-24 rounded-full bg-[#FFD175]/20" />
+      <div className="absolute bottom-[-28px] left-[-18px] h-24 w-24 rounded-full bg-[#611232]/6" />
 
-      <div className="mt-5 flex-1 space-y-3 text-[15px] text-[#5F4B52]">
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-4 rounded-full border border-[#611232]" />
-          <span>{tianguis.schedule}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-4 rounded-full bg-[#611232]" />
-          <span>{tianguis.location}</span>
-        </div>
-      </div>
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="flex items-start justify-between gap-3">
+          <span className="inline-flex rounded-full bg-[#fff1cf] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8D6B10]">
+            Tianguis de hoy
+          </span>
 
-      <span className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#FFD175] px-4 py-3 text-[15px] font-bold uppercase text-[#7A5A00]">
-        Ver en mapa
-      </span>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#611232] shadow-[0_10px_22px_rgba(97,18,50,0.16)]">
+            <img
+              src="/img/iconos/tianguis.png"
+              alt=""
+              className="h-20 w-20 object-contain"
+            />
+          </div>
+        </div>
+
+        <div className="mt-5 min-h-[56px]">
+          <h3 className="text-[20px] font-bold leading-6 text-[#611232]">
+            {tianguis.location}
+          </h3>
+        </div>
+
+
+
+      </div>
     </Link>
   );
 }

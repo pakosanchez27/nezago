@@ -2,13 +2,14 @@ import { Link } from "react-router-dom";
 
 export default function CardGeneral({ item, event, to }) {
   const card = item ?? event;
-  const target = to ?? card?.to ?? "/eventos";
+  const target =
+    to ?? card?.to ?? (card?.slug ? `/eventos/${card.slug}` : "/eventos");
 
   return (
-    <div className="cars-eventos mt-4">
+    <div className="cars-eventos mt-4 md:mt-0">
       <Link
         to={target}
-        className="card-evento group flex h-[198px] w-[300px] flex-col overflow-hidden rounded-[24px] border border-[#611232]/8 bg-white shadow-[0_14px_34px_rgba(97,18,50,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(97,18,50,0.12)]"
+        className="card-evento group flex h-[198px] w-[300px] flex-col overflow-hidden rounded-[24px] border border-[#611232]/8 bg-white shadow-[0_14px_34px_rgba(97,18,50,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(97,18,50,0.12)] md:h-[220px] md:w-full"
       >
         <div className="relative h-28 w-full shrink-0 overflow-hidden">
           <img
