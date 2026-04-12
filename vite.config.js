@@ -87,17 +87,17 @@ function openAIChatProxy(mode) {
   };
 }
 
-export default defineConfig({
-  base: "/",
-});
+// export default defineConfig({
+//   base: "/",
+// });
 
-// export default defineConfig(({ mode }) => ({
-//   plugins: [react(), openAIChatProxy(mode)],
-//   server: {
-//     host: true,
-//     allowedHosts: true,
-//     watch: {
-//       usePolling: true,
-//     },
-//   },
-// }));
+export default defineConfig(({ mode }) => ({
+  plugins: [react(), openAIChatProxy(mode)],
+  server: {
+    host: true,
+    allowedHosts: true,
+    watch: {
+      usePolling: true,
+    },
+  },
+}));
